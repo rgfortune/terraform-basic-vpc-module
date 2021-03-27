@@ -18,7 +18,3 @@ variable "region" {
   type        = string
   description = "e.g. eu-west-2"
 }
-variable "ci_prefix" {
-  type        = string
-  description = "e.g. bass44"
-}
