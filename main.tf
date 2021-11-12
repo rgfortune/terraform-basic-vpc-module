@@ -8,9 +8,9 @@ resource "aws_vpc" "vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = var.vpc_name
-    Project = var.project_name
-    Owner = var.owner
+    Name        = var.vpc_name
+    Project     = var.project_name
+    Owner       = var.owner
     Environment = var.env
   }
 }
