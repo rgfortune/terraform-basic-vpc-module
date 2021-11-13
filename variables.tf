@@ -1,30 +1,15 @@
 #------------------------------------------------
-# VPC Variables
+# Variables
 #------------------------------------------------
 
-variable "env" {
-  type        = string
-  description = "e.g. dev"
-}
-variable "vpc_name" {
-  type        = string
-  description = "e.g. Dev VPC"
-}
+variable "vpc_name" {}
 variable "cidr" {
-  type        = string
-  description = "e.g. 10.72.176.0/21"
+
 }
+variable "env" {}
 variable "region" {
-  type        = string
-  description = "e.g. eu-west-2"
+  default = "us-east-1"
 }
 
-variable "project_name" {
-  type        = string
-  description = "e.g. Worpress Blog"
-}
-
-variable "owner" {
-  type        = string
-  description = "e.g. Joe Public"
-}
+variable "owner" {}
+variable "project_name" {}
