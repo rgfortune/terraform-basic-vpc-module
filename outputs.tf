@@ -7,8 +7,8 @@ output "vpc_cidr_block" { value = aws_vpc.vpc.cidr_block }
 
 output "env" { value = var.env }
 
-output "aws_subnet_publicAzA_id" { value = aws_subnet.publicAzA.id }
-output "aws_subnet_publicAzB_id" { value = aws_subnet.publicAzB.id }
+output "aws_publicSubnet00_id" { value = aws_subnet.publicSubnet00.id }
+output "aws_publicSubnet01_id" { value = aws_subnet.publicSubnet01.id }
 
-output "aws_subnet_privateAzA_id" { value = aws_subnet.privateAzA.id }
-output "aws_subnet_privateAzB_id" { value = aws_subnet.privateAzB.id }
+output "aws_privateSubnet00_id" { value = aws_subnet.privateSubnet00.id }
+output "aws_privateSubnet01_id" { value = aws_subnet.privateSubnet01.id }
