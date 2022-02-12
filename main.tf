@@ -39,32 +39,20 @@ resource "aws_route_table" "public_route_table" {
   tags = { Name = "Public Route Table" }
 }
 
-resource "aws_subnet" "publicSubnet00" {
+resource "aws_subnet" "publicSubnets" {
+  count = var.public_subnet_count
   lifecycle { prevent_destroy = "false" }
   vpc_id            = aws_vpc.vpc.id
-  availability_zone = data.aws_availability_zones.available.names[0]
-  cidr_block        = cidrsubnet(var.cidr, 3, 0)
-  tags              = { Name = "Public Subnet-00" }
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+  cidr_block        = cidrsubnet(var.cidr, 3, count.index)
+  tags              = { Name = "Public Subnet-0${count.index}" }
 }
 
-resource "aws_subnet" "publicSubnet01" {
-  lifecycle { prevent_destroy = "false" }
-  vpc_id            = aws_vpc.vpc.id
-  availability_zone = data.aws_availability_zones.available.names[1]
-  cidr_block        = cidrsubnet(var.cidr, 3, 1)
-  tags              = { Name = "Public Subnet-01" }
-}
-
-resource "aws_route_table_association" "publicSubnet00" {
-  subnet_id      = aws_subnet.publicSubnet00.id
+resource "aws_route_table_association" "publicSubnets" {
+  count = var.public_subnet_count
+  subnet_id      = aws_subnet.publicSubnets[count.index].id
   route_table_id = aws_route_table.public_route_table.id
 }
-
-resource "aws_route_table_association" "publicSubnet01" {
-  subnet_id      = aws_subnet.publicSubnet01.id
-  route_table_id = aws_route_table.public_route_table.id
-}
-
 
 #------------------------------------------- 
 # Private Subnets
@@ -79,28 +67,18 @@ resource "aws_route_table" "private_route_table" {
   tags = { Name = "Private Route Table" }
 }
 
-resource "aws_subnet" "privateSubnet00" {
+resource "aws_subnet" "privateSubnets" {
+  count = var.private_subnet_count
   lifecycle { prevent_destroy = "false" }
   vpc_id            = aws_vpc.vpc.id
-  availability_zone = data.aws_availability_zones.available.names[0]
-  cidr_block        = cidrsubnet(var.cidr, 3, 3)
-  tags              = { Name = "Private Subnet A" }
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+  cidr_block        = cidrsubnet(var.cidr, 3, count.index + var.public_subnet_count)
+  tags              = { Name = "Private Subnet-0${count.index}" }
 }
 
-resource "aws_subnet" "privateSubnet01" {
-  lifecycle { prevent_destroy = "false" }
-  vpc_id            = aws_vpc.vpc.id
-  availability_zone = data.aws_availability_zones.available.names[1]
-  cidr_block        = cidrsubnet(var.cidr, 3, 4)
-  tags              = { Name = "Private Subnet B" }
-}
-
-resource "aws_route_table_association" "privateSubnet00" {
-  subnet_id      = aws_subnet.privateSubnet00.id
+resource "aws_route_table_association" "privateSubnets" {
+  count = var.private_subnet_count
+  subnet_id      = aws_subnet.privateSubnets[count.index].id
   route_table_id = aws_route_table.private_route_table.id
 }
 
-resource "aws_route_table_association" "privateSubnet01" {
-  subnet_id      = aws_subnet.privateSubnet01.id
-  route_table_id = aws_route_table.private_route_table.id
-}
