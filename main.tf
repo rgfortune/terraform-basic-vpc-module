@@ -9,7 +9,7 @@ resource "aws_vpc" "vpc" {
 
   tags = {
     Name        = var.vpc_name
-    Project     = var.project_name
+    Project     = var.project
     Owner       = var.owner
     Environment = var.env
   }

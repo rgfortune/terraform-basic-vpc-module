@@ -12,4 +12,4 @@ variable "region" {
 }
 
 variable "owner" {}
-variable "project_name" {}
+variable "project" {}
