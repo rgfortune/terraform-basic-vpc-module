@@ -30,6 +30,11 @@ resource "aws_internet_gateway" "gw" {
 
 resource "aws_eip" "nat_gw" {
   vpc = true
+
+  tags = merge(var.tags, {
+    Name = "${var.tags["project"]} VPC - NAT GW"
+  })
+
 }
 
 resource "aws_nat_gateway" "nat_gw" {
