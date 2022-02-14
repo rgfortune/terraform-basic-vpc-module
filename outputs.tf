@@ -5,7 +5,5 @@
 output "vpc_id" { value = aws_vpc.vpc.id }
 output "vpc_cidr_block" { value = aws_vpc.vpc.cidr_block }
 
-output "env" { value = var.env }
-
 output "aws_publicSubnets" { value = aws_subnet.publicSubnets }
 output "aws_privateSubnets" { value = aws_subnet.privateSubnets }
