@@ -8,7 +8,7 @@ resource "aws_vpc" "vpc" {
   enable_dns_hostnames = true
 
   tags = merge(var.tags, {
-    Name = "${var.project} VPC"
+    Name = "${var.tags["project"]} VPC"
   })
 }
 
@@ -20,7 +20,7 @@ resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.vpc.id
 
   tags = merge(var.tags, {
-    Name = "${var.project} VPC - IGW"
+    Name = "${var.tags["project"]} VPC - IGW"
   })
 }
 
@@ -37,7 +37,7 @@ resource "aws_nat_gateway" "nat_gw" {
   subnet_id     = aws_subnet.publicSubnets[0].id
 
   tags = merge(var.tags, {
-    Name = "${var.project} VPC - NAT"
+    Name = "${var.tags["project"]} VPC - NAT"
   })
 }
 
@@ -56,7 +56,7 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = merge(var.tags, {
-    Name = "${var.project} VPC - Public Route Table"
+    Name = "${var.tags["project"]} VPC - Public Route Table"
   })
 }
 
@@ -68,7 +68,7 @@ resource "aws_subnet" "publicSubnets" {
   cidr_block        = cidrsubnet(var.cidr, 3, count.index)
 
   tags = merge(var.tags, {
-    Name = "${var.project} VPC - Public Subnet 0${count.index}"
+    Name = "${var.tags["project"]} VPC - Public Subnet 0${count.index}"
   })
 
 }
@@ -91,7 +91,7 @@ resource "aws_route_table" "private_route_table" {
   }
 
   tags = merge(var.tags, {
-    Name = "${var.project} VPC - Private Route Table"
+    Name = "${var.tags["project"]} VPC - Private Route Table"
   })
 }
 
@@ -103,7 +103,7 @@ resource "aws_subnet" "privateSubnets" {
   cidr_block        = cidrsubnet(var.cidr, 3, count.index + var.public_subnet_count)
 
   tags = merge(var.tags, {
-    Name = "${var.project} VPC - Private Subnet 0${count.index}"
+    Name = "${var.tags["project"]} VPC - Private Subnet 0${count.index}"
   })
 }
 

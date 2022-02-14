@@ -17,4 +17,6 @@ variable "private_subnet_count" {
   default     = 2
 }
 
-variable "tags" {}
+variable "tags" {
+  type = map(any)
+}
