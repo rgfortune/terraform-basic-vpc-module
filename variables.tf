@@ -17,15 +17,4 @@ variable "private_subnet_count" {
   default     = 2
 }
 
-variable "env" {
-  type        = string
-  description = "DEV|PRE|PRD"
-  default     = "DEV"
-}
-
-variable "region" {
-  type    = string
-  default = "us-east-1"
-}
-
 variable "tags" {}
