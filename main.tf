@@ -79,7 +79,7 @@ resource "aws_subnet" "publicSubnets" {
 }
 
 resource "aws_route_table_association" "publicSubnets" {
-  count          = var.public_subnet_count
+  count          = var.availability_zones_count
   subnet_id      = aws_subnet.publicSubnets[count.index].id
   route_table_id = aws_route_table.public_route_table.id
 }
@@ -113,7 +113,7 @@ resource "aws_subnet" "privateSubnets" {
 }
 
 resource "aws_route_table_association" "privateSubnets" {
-  count          = var.private_subnet_count
+  count          = var.availability_zones_count
   subnet_id      = aws_subnet.privateSubnets[count.index].id
   route_table_id = aws_route_table.private_route_table.id
 }
