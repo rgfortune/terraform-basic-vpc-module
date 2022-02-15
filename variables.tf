@@ -5,15 +5,9 @@
 variable "vpc_name" {}
 variable "cidr" {}
 
-variable "public_subnet_count" {
+variable "availability_zones_count" {
   type        = number
-  description = "Number of public subnets to create"
-  default     = 2
-}
-
-variable "private_subnet_count" {
-  type        = number
-  description = "Number of private subnets to create"
+  description = "Number of availabilty zones to use"
   default     = 2
 }
 
