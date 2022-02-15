@@ -66,11 +66,11 @@ resource "aws_route_table" "public_route_table" {
 }
 
 resource "aws_subnet" "publicSubnets" {
-  count = var.public_subnet_count
+  count = length(local.availability_zones)
   lifecycle { prevent_destroy = "false" }
   vpc_id            = aws_vpc.vpc.id
-  availability_zone = data.aws_availability_zones.available.names[count.index]
-  cidr_block        = cidrsubnet(var.cidr, 3, count.index)
+  availability_zone = local.availability_zones[count.index]
+  cidr_block        = local.public_subnet_list[count.index]
 
   tags = merge(var.tags, {
     Name = "${var.tags["Project"]} - Public Subnet 0${count.index}"
@@ -101,11 +101,11 @@ resource "aws_route_table" "private_route_table" {
 }
 
 resource "aws_subnet" "privateSubnets" {
-  count = var.private_subnet_count
+  count = length(local.availability_zones)
   lifecycle { prevent_destroy = "false" }
   vpc_id            = aws_vpc.vpc.id
-  availability_zone = data.aws_availability_zones.available.names[count.index]
-  cidr_block        = cidrsubnet(var.cidr, 3, count.index + var.public_subnet_count)
+  availability_zone = local.availability_zones[count.index]
+  cidr_block        = local.private_subnet_list[count.index]
 
   tags = merge(var.tags, {
     Name = "${var.tags["Project"]} - Private Subnet 0${count.index}"
