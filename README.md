@@ -1,9 +1,9 @@
-##### -------------------------------------------
+-------------------------------------------
 ##### Basic VPC
-#####  - Public and Private Subnets
-#####  - Internet Gateway
-#####  - NAT Gateway
-##### -------------------------------------------
+- Public and Private Subnets
+- Internet Gateway
+- NAT Gateway
+-------------------------------------------
 
 Description:
 
