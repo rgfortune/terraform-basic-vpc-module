@@ -1,14 +1,14 @@
-##### Basic VPC
+### Basic VPC
 - Public and Private Subnets
 - Internet Gateway
 - NAT Gateway
 ***
 
-Description:
+##### Description:
 
 Creates a VPC with a public and private subnet in each availability zone.
 
-Example Usage:
+##### Example Usage:
 
     module "vpc" {
       source = "github.com/rgfortune/terraform-basic-vpc-module"
