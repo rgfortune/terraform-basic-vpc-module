@@ -8,7 +8,7 @@ resource "aws_vpc" "vpc" {
   enable_dns_hostnames = true
 
   tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} VPC"
+    Name = "${var.tags["Project"]}"
   })
 }
 
@@ -20,7 +20,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 
   tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} VPC - IGW"
+    Name = "${var.tags["Project"]}"
   })
 }
 
@@ -32,7 +32,7 @@ resource "aws_eip" "nat_gw" {
   vpc = true
 
   tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} VPC - NAT GW"
+    Name = "${var.tags["Project"]}"
   })
 
 }
@@ -42,7 +42,7 @@ resource "aws_nat_gateway" "nat_gw" {
   subnet_id     = aws_subnet.publicSubnets[0].id
 
   tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} VPC - NAT"
+    Name = "${var.tags["Project"]}"
   })
 }
 
@@ -61,7 +61,7 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} VPC - Public Route Table"
+    Name = "${var.tags["Project"]} - Public Route Table"
   })
 }
 
@@ -73,7 +73,7 @@ resource "aws_subnet" "publicSubnets" {
   cidr_block        = cidrsubnet(var.cidr, 3, count.index)
 
   tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} VPC - Public Subnet 0${count.index}"
+    Name = "${var.tags["Project"]} - Public Subnet 0${count.index}"
   })
 
 }
@@ -96,7 +96,7 @@ resource "aws_route_table" "private_route_table" {
   }
 
   tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} VPC - Private Route Table"
+    Name = "${var.tags["Project"]} - Private Route Table"
   })
 }
 
@@ -108,7 +108,7 @@ resource "aws_subnet" "privateSubnets" {
   cidr_block        = cidrsubnet(var.cidr, 3, count.index + var.public_subnet_count)
 
   tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} VPC - Private Subnet 0${count.index}"
+    Name = "${var.tags["Project"]} - Private Subnet 0${count.index}"
   })
 }
 
@@ -117,4 +117,3 @@ resource "aws_route_table_association" "privateSubnets" {
   subnet_id      = aws_subnet.privateSubnets[count.index].id
   route_table_id = aws_route_table.private_route_table.id
 }
-
