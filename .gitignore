@@ -1,0 +1,12 @@
+# Ansible
+**/.vault_pass
+
+# Mac OS X
+**/.DS_Store
+
+# Terraform
+
+**/.terraform/
+**/terraform.tfstate
+**/terraform.tfstate.backup
+**/.terraform.lock.hcl
