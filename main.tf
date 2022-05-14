@@ -66,10 +66,10 @@ resource "aws_route_table" "public_route_table" {
 }
 
 resource "aws_subnet" "publicSubnets" {
-  count = length(local.availability_zones)
+  count = var.public_subnets_count
   lifecycle { prevent_destroy = "false" }
   vpc_id            = aws_vpc.vpc.id
-  availability_zone = local.availability_zones[count.index]
+  availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
   cidr_block        = local.public_subnet_list[count.index]
 
   tags = merge(var.tags, {
@@ -79,7 +79,7 @@ resource "aws_subnet" "publicSubnets" {
 }
 
 resource "aws_route_table_association" "publicSubnets" {
-  count          = var.availability_zones_count
+  count          = var.public_subnets_count
   subnet_id      = aws_subnet.publicSubnets[count.index].id
   route_table_id = aws_route_table.public_route_table.id
 }
@@ -101,10 +101,10 @@ resource "aws_route_table" "private_route_table" {
 }
 
 resource "aws_subnet" "privateSubnets" {
-  count = length(local.availability_zones)
+  count = var.private_subnets_count
   lifecycle { prevent_destroy = "false" }
   vpc_id            = aws_vpc.vpc.id
-  availability_zone = local.availability_zones[count.index]
+  availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
   cidr_block        = local.private_subnet_list[count.index]
 
   tags = merge(var.tags, {
@@ -113,7 +113,7 @@ resource "aws_subnet" "privateSubnets" {
 }
 
 resource "aws_route_table_association" "privateSubnets" {
-  count          = var.availability_zones_count
+  count          = var.private_subnets_count
   subnet_id      = aws_subnet.privateSubnets[count.index].id
   route_table_id = aws_route_table.private_route_table.id
 }
