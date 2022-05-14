@@ -6,7 +6,7 @@
 
 #### Description:
 
-Creates a VPC with a public and private subnet in each availability zone.
+Creates a VPC with a public and private subnets in each availability zone.
 
 #### Example Usage:
 
@@ -19,6 +19,10 @@ Creates a VPC with a public and private subnet in each availability zone.
 
       # Specify the number of AZs you want
       availability_zones_count = 2
+
+      # Specify the number and type of subnets you want
+      public_subnets_count = 2
+      private_subnets_count = 4
 
       # Common Tags
       tags = {
