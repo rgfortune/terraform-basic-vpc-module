@@ -6,7 +6,7 @@
 
 #### Description:
 
-Creates a VPC with a public and private subnets in each availability zone.
+Creates a VPC with public and private subnets in each availability zone.
 
 #### Example Usage:
 
@@ -23,6 +23,11 @@ Creates a VPC with a public and private subnets in each availability zone.
       # Specify the number and type of subnets you want
       public_subnets_count = 2
       private_subnets_count = 4
+
+      # Specify the number NAT GWs you want
+      # Default to 1 in a public subnet.
+      # Setting to 2 or equal to the total number of availability zones in use will provide HA
+      nat_gw_count = 1
 
       # Common Tags
       tags = {

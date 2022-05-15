@@ -28,8 +28,9 @@ resource "aws_internet_gateway" "igw" {
 # Nat Gateway
 #-------------------------------------------
 
-resource "aws_eip" "nat_gw" {
-  vpc = true
+resource "aws_eip" "nat_gws" {
+  count = var.nat_gw_count
+  vpc   = true
 
   tags = merge(var.tags, {
     Name = "${var.tags["Project"]}"
@@ -37,9 +38,10 @@ resource "aws_eip" "nat_gw" {
 
 }
 
-resource "aws_nat_gateway" "nat_gw" {
-  allocation_id = aws_eip.nat_gw.id
-  subnet_id     = aws_subnet.publicSubnets[0].id
+resource "aws_nat_gateway" "nat_gws" {
+  count         = var.nat_gw_count
+  allocation_id = aws_eip.nat_gws[count.index].id
+  subnet_id     = aws_subnet.publicSubnets[count.index].id
 
   tags = merge(var.tags, {
     Name = "${var.tags["Project"]}"
@@ -88,15 +90,16 @@ resource "aws_route_table_association" "publicSubnets" {
 # Private Subnets
 #------------------------------------------- 
 
-resource "aws_route_table" "private_route_table" {
+resource "aws_route_table" "private_route_tables" {
+  count  = var.nat_gw_count
   vpc_id = aws_vpc.vpc.id
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gw.id
+    nat_gateway_id = aws_nat_gateway.nat_gws[count.index].id
   }
 
   tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} - Private Route Table"
+    Name = "${var.tags["Project"]} - Private Route Table 0${count.index}"
   })
 }
 
@@ -115,5 +118,5 @@ resource "aws_subnet" "privateSubnets" {
 resource "aws_route_table_association" "privateSubnets" {
   count          = var.private_subnets_count
   subnet_id      = aws_subnet.privateSubnets[count.index].id
-  route_table_id = aws_route_table.private_route_table.id
+  route_table_id = aws_route_table.private_route_tables[(count.index % var.nat_gw_count)].id
 }
