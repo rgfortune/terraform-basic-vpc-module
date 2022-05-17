@@ -20,9 +20,9 @@ Creates a VPC with public and private subnets in each availability zone.
       # Specify the number of AZs you want
       availability_zones_count = 2
 
-      # Specify the number and type of subnets you want
-      public_subnets_count = 2
-      private_subnets_count = 4
+      # Specify the names of your public/private subnets (Application Stack Tiers)
+      public_subnets_names = ["Public"] # Module currently only supports one
+      private_subnets_names = ["Web","DB"] # Can support up to four
 
       # Specify the number NAT GWs you want
       # Default to 1 in a public subnet.

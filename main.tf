@@ -68,7 +68,7 @@ resource "aws_route_table" "public_route_table" {
 }
 
 resource "aws_subnet" "public_subnets" {
-  count = length(var.public_subnet_names)
+  count = length(var.public_subnet_names) >= 1 ? var.availability_zones_count : 0
   lifecycle { prevent_destroy = "false" }
   vpc_id            = aws_vpc.vpc.id
   availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
@@ -104,7 +104,7 @@ resource "aws_route_table" "private_route_tables" {
 }
 
 resource "aws_subnet" "private_subnets_00" {
-  count = length(var.private_subnet_names) >= 1 ? 3 : 0
+  count = length(var.private_subnet_names) >= 1 ? var.availability_zones_count : 0
   lifecycle { prevent_destroy = "false" }
   vpc_id            = aws_vpc.vpc.id
   availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
@@ -116,7 +116,7 @@ resource "aws_subnet" "private_subnets_00" {
 }
 
 resource "aws_subnet" "private_subnets_01" {
-  count = length(var.private_subnet_names) >= 2 ? 3 : 0
+  count = length(var.private_subnet_names) >= 2 ? var.availability_zones_count : 0
   lifecycle { prevent_destroy = "false" }
   vpc_id            = aws_vpc.vpc.id
   availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
@@ -128,7 +128,7 @@ resource "aws_subnet" "private_subnets_01" {
 }
 
 resource "aws_subnet" "private_subnets_02" {
-  count = length(var.private_subnet_names) >= 3 ? 3 : 0
+  count = length(var.private_subnet_names) >= 3 ? var.availability_zones_count : 0
   lifecycle { prevent_destroy = "false" }
   vpc_id            = aws_vpc.vpc.id
   availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
@@ -140,19 +140,19 @@ resource "aws_subnet" "private_subnets_02" {
 }
 
 resource "aws_route_table_association" "private_subnets_00" {
-  count          = length(var.private_subnet_names) >= 1 ? 3 : 0
+  count          = length(var.private_subnet_names) >= 1 ? var.availability_zones_count : 0
   subnet_id      = aws_subnet.private_subnets_00[count.index].id
   route_table_id = aws_route_table.private_route_tables[(count.index % var.nat_gw_count)].id
 }
 
 resource "aws_route_table_association" "private_subnets_01" {
-  count          = length(var.private_subnet_names) >= 2 ? 3 : 0
+  count          = length(var.private_subnet_names) >= 2 ? var.availability_zones_count : 0
   subnet_id      = aws_subnet.private_subnets_01[count.index].id
   route_table_id = aws_route_table.private_route_tables[(count.index % var.nat_gw_count)].id
 }
 
 resource "aws_route_table_association" "private_subnets_02" {
-  count          = length(var.private_subnet_names) >= 3 ? 3 : 0
+  count          = length(var.private_subnet_names) >= 3 ? var.availability_zones_count : 0
   subnet_id      = aws_subnet.private_subnets_02[count.index].id
   route_table_id = aws_route_table.private_route_tables[(count.index % var.nat_gw_count)].id
 }
