@@ -41,7 +41,7 @@ resource "aws_eip" "nat_gws" {
 resource "aws_nat_gateway" "nat_gws" {
   count         = var.nat_gw_count
   allocation_id = aws_eip.nat_gws[count.index].id
-  subnet_id     = aws_subnet.publicSubnets[count.index].id
+  subnet_id     = aws_subnet.public_subnets[count.index].id
 
   tags = merge(var.tags, {
     Name = "${var.tags["Project"]}"
@@ -67,12 +67,12 @@ resource "aws_route_table" "public_route_table" {
   })
 }
 
-resource "aws_subnet" "publicSubnets" {
-  count = var.public_subnets_count
+resource "aws_subnet" "public_subnets" {
+  count = length(var.public_subnet_names)
   lifecycle { prevent_destroy = "false" }
   vpc_id            = aws_vpc.vpc.id
   availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
-  cidr_block        = local.public_subnet_list[count.index]
+  cidr_block        = local.public_subnet_cidrs[count.index]
 
   tags = merge(var.tags, {
     Name = "${var.tags["Project"]} - Public Subnet 0${count.index}"
@@ -80,9 +80,9 @@ resource "aws_subnet" "publicSubnets" {
 
 }
 
-resource "aws_route_table_association" "publicSubnets" {
-  count          = var.public_subnets_count
-  subnet_id      = aws_subnet.publicSubnets[count.index].id
+resource "aws_route_table_association" "public_subnets" {
+  count          = length(var.public_subnet_names)
+  subnet_id      = aws_subnet.public_subnets[count.index].id
   route_table_id = aws_route_table.public_route_table.id
 }
 
@@ -103,20 +103,56 @@ resource "aws_route_table" "private_route_tables" {
   })
 }
 
-resource "aws_subnet" "privateSubnets" {
-  count = var.private_subnets_count
+resource "aws_subnet" "private_subnets_00" {
+  count = length(var.private_subnet_names) >= 1 ? 3 : 0
   lifecycle { prevent_destroy = "false" }
   vpc_id            = aws_vpc.vpc.id
   availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
-  cidr_block        = local.private_subnet_list[count.index]
+  cidr_block        = local.private_subnet_cidrs_groups[0][count.index]
 
   tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} - Private Subnet 0${count.index}"
+    Name = "${var.tags["Project"]} - ${var.private_subnet_names[0]} Private Subnet"
   })
 }
 
-resource "aws_route_table_association" "privateSubnets" {
-  count          = var.private_subnets_count
-  subnet_id      = aws_subnet.privateSubnets[count.index].id
+resource "aws_subnet" "private_subnets_01" {
+  count = length(var.private_subnet_names) >= 2 ? 3 : 0
+  lifecycle { prevent_destroy = "false" }
+  vpc_id            = aws_vpc.vpc.id
+  availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
+  cidr_block        = local.private_subnet_cidrs_groups[1][count.index]
+
+  tags = merge(var.tags, {
+    Name = "${var.tags["Project"]} - ${var.private_subnet_names[1]} Private Subnet"
+  })
+}
+
+resource "aws_subnet" "private_subnets_02" {
+  count = length(var.private_subnet_names) >= 3 ? 3 : 0
+  lifecycle { prevent_destroy = "false" }
+  vpc_id            = aws_vpc.vpc.id
+  availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
+  cidr_block        = local.private_subnet_cidrs_groups[2][count.index]
+
+  tags = merge(var.tags, {
+    Name = "${var.tags["Project"]} - ${var.private_subnet_names[2]} Private Subnet"
+  })
+}
+
+resource "aws_route_table_association" "private_subnets_00" {
+  count          = length(var.private_subnet_names) >= 1 ? 3 : 0
+  subnet_id      = aws_subnet.private_subnets_00[count.index].id
+  route_table_id = aws_route_table.private_route_tables[(count.index % var.nat_gw_count)].id
+}
+
+resource "aws_route_table_association" "private_subnets_01" {
+  count          = length(var.private_subnet_names) >= 2 ? 3 : 0
+  subnet_id      = aws_subnet.private_subnets_01[count.index].id
+  route_table_id = aws_route_table.private_route_tables[(count.index % var.nat_gw_count)].id
+}
+
+resource "aws_route_table_association" "private_subnets_02" {
+  count          = length(var.private_subnet_names) >= 3 ? 3 : 0
+  subnet_id      = aws_subnet.private_subnets_02[count.index].id
   route_table_id = aws_route_table.private_route_tables[(count.index % var.nat_gw_count)].id
 }

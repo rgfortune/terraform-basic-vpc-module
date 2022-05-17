@@ -15,16 +15,16 @@ variable "availability_zones_count" {
   default     = 2
 }
 
-variable "public_subnets_count" {
-  type        = number
-  description = "Number of public subnets to create"
-  default     = 2
+variable "public_subnets_names" {
+  type        = list(any)
+  description = "List of private subnets"
+  default     = ["public"]
 }
 
-variable "private_subnets_count" {
-  type        = number
-  description = "Number of private subnets to create"
-  default     = 2
+variable "private_subnets_names" {
+  type        = list(any)
+  description = "List of private subnets"
+  default     = ["private"]
 }
 
 # Default to 1 in a public subnet.
