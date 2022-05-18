@@ -28,7 +28,9 @@ resource "aws_eip" "nat_gws" {
   count = var.nat_gw_count
   vpc   = true
 
-  tags = var.common_tags
+  tags = merge(var.common_tags, {
+    Name = "${var.common_tags["Project"]}"
+  })
 
 }
 
@@ -37,7 +39,9 @@ resource "aws_nat_gateway" "nat_gws" {
   allocation_id = aws_eip.nat_gws[count.index].id
   subnet_id     = aws_subnet.public_subnets[count.index].id
 
-  tags = var.common_tags
+  tags = merge(var.common_tags, {
+    Name = "${var.common_tags["Project"]}"
+  })
 }
 
 #------------------------------------------- 
