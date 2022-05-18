@@ -7,9 +7,7 @@ resource "aws_vpc" "vpc" {
   cidr_block           = var.cidr
   enable_dns_hostnames = true
 
-  tags = merge(var.tags, {
-    Name = "${var.tags["Project"]}"
-  })
+  tags = var.common_tags
 }
 
 #------------------------------------------- 
@@ -19,9 +17,7 @@ resource "aws_vpc" "vpc" {
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 
-  tags = merge(var.tags, {
-    Name = "${var.tags["Project"]}"
-  })
+  tags = var.common_tags
 }
 
 #-------------------------------------------
@@ -32,9 +28,7 @@ resource "aws_eip" "nat_gws" {
   count = var.nat_gw_count
   vpc   = true
 
-  tags = merge(var.tags, {
-    Name = "${var.tags["Project"]}"
-  })
+  tags = var.common_tags
 
 }
 
@@ -43,9 +37,7 @@ resource "aws_nat_gateway" "nat_gws" {
   allocation_id = aws_eip.nat_gws[count.index].id
   subnet_id     = aws_subnet.public_subnets[count.index].id
 
-  tags = merge(var.tags, {
-    Name = "${var.tags["Project"]}"
-  })
+  tags = var.common_tags
 }
 
 #------------------------------------------- 
@@ -62,8 +54,8 @@ resource "aws_route_table" "public_route_table" {
     gateway_id = aws_internet_gateway.igw.id
   }
 
-  tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} - Public Route Table"
+  tags = merge(var.common_tags, {
+    Name = "${var.common_tags["Project"]} - Public Route Table"
   })
 }
 
@@ -74,8 +66,8 @@ resource "aws_subnet" "public_subnets" {
   availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
   cidr_block        = local.public_subnet_cidrs[count.index]
 
-  tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} - Public Subnet 0${count.index}"
+  tags = merge(var.common_tags, {
+    Name = "${var.common_tags["Project"]} - Public Subnet 0${count.index}"
   })
 
 }
@@ -98,8 +90,8 @@ resource "aws_route_table" "private_route_tables" {
     nat_gateway_id = aws_nat_gateway.nat_gws[count.index].id
   }
 
-  tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} - Private Route Table 0${count.index}"
+  tags = merge(var.common_tags, {
+    Name = "${var.common_tags["Project"]} - Private Route Table 0${count.index}"
   })
 }
 
@@ -110,8 +102,8 @@ resource "aws_subnet" "private_subnets_00" {
   availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
   cidr_block        = local.private_subnet_cidrs_groups[0][count.index]
 
-  tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} - ${var.private_subnet_names[0]} Private Subnet"
+  tags = merge(var.common_tags, {
+    Name = "${var.common_tags["Project"]} - ${var.private_subnet_names[0]} Private Subnet"
   })
 }
 
@@ -122,8 +114,8 @@ resource "aws_subnet" "private_subnets_01" {
   availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
   cidr_block        = local.private_subnet_cidrs_groups[1][count.index]
 
-  tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} - ${var.private_subnet_names[1]} Private Subnet"
+  tags = merge(var.common_tags, {
+    Name = "${var.common_tags["Project"]} - ${var.private_subnet_names[1]} Private Subnet"
   })
 }
 
@@ -134,8 +126,8 @@ resource "aws_subnet" "private_subnets_02" {
   availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
   cidr_block        = local.private_subnet_cidrs_groups[2][count.index]
 
-  tags = merge(var.tags, {
-    Name = "${var.tags["Project"]} - ${var.private_subnet_names[2]} Private Subnet"
+  tags = merge(var.common_tags, {
+    Name = "${var.common_tags["Project"]} - ${var.private_subnet_names[2]} Private Subnet"
   })
 }
 
