@@ -35,7 +35,7 @@ variable "nat_gw_count" {
   default     = 1
 }
 
-variable "tags" {
+variable "common_tags" {
   type        = map(any)
   description = "Common project/resource tags"
   default = {
