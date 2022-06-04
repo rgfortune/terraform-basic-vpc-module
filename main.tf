@@ -91,7 +91,7 @@ resource "aws_route_table_association" "public_subnets" {
 #------------------------------------------- 
 
 resource "aws_route_table" "private_route_tables" {
-  count  = var.nat_gw_count
+  count  = length(var.private_subnet_names)
   vpc_id = aws_vpc.vpc.id
   route {
     cidr_block     = "0.0.0.0/0"
