@@ -146,17 +146,17 @@ resource "aws_subnet" "private_subnets_02" {
 resource "aws_route_table_association" "private_subnets_00" {
   count          = length(var.private_subnet_names) >= 1 ? var.availability_zones_count : 0
   subnet_id      = aws_subnet.private_subnets_00[count.index].id
-  route_table_id = aws_route_table.private_route_tables[(count.index % var.nat_gw_count)].id
+  route_table_id = aws_route_table.private_route_tables[0].id
 }
 
 resource "aws_route_table_association" "private_subnets_01" {
   count          = length(var.private_subnet_names) >= 2 ? var.availability_zones_count : 0
   subnet_id      = aws_subnet.private_subnets_01[count.index].id
-  route_table_id = aws_route_table.private_route_tables[(count.index % var.nat_gw_count)].id
+  route_table_id = aws_route_table.private_route_tables[1].id
 }
 
 resource "aws_route_table_association" "private_subnets_02" {
   count          = length(var.private_subnet_names) >= 3 ? var.availability_zones_count : 0
   subnet_id      = aws_subnet.private_subnets_02[count.index].id
-  route_table_id = aws_route_table.private_route_tables[(count.index % var.nat_gw_count)].id
+  route_table_id = aws_route_table.private_route_tables[2].id
 }
