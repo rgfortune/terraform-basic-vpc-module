@@ -20,7 +20,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 
   tags = merge(var.common_tags, {
-    Name = "${var.common_tags["Project"]}"
+    Name = var.vpc_name
   })
 }
 
@@ -33,7 +33,7 @@ resource "aws_eip" "nat_gws" {
   vpc   = true
 
   tags = merge(var.common_tags, {
-    Name = "${var.common_tags["Project"]}"
+    Name = var.vpc_name
   })
 
 }
@@ -44,7 +44,7 @@ resource "aws_nat_gateway" "nat_gws" {
   subnet_id     = aws_subnet.public_subnets[count.index].id
 
   tags = merge(var.common_tags, {
-    Name = "${var.common_tags["Project"]}"
+    Name = var.vpc_name
   })
 }
 
@@ -63,7 +63,7 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.common_tags["Project"]} - Public Route Table"
+    Name = "${var.vpc_name} - Public Route Table"
   })
 }
 
@@ -75,7 +75,7 @@ resource "aws_subnet" "public_subnets" {
   cidr_block        = local.public_subnet_cidrs[count.index]
 
   tags = merge(var.common_tags, {
-    Name = "${var.common_tags["Project"]} - Public Subnet 0${count.index}"
+    Name = "${var.vpc_name} - Public Subnet 0${count.index}"
   })
 
 }
@@ -91,6 +91,9 @@ resource "aws_route_table_association" "public_subnets" {
 #------------------------------------------- 
 
 resource "aws_route_table" "private_route_tables" {
+  lifecycle {
+    ignore_changes = [route]
+  }
   count  = length(var.private_subnet_names)
   vpc_id = aws_vpc.vpc.id
 
@@ -103,7 +106,7 @@ resource "aws_route_table" "private_route_tables" {
   }
 
   tags = merge(var.common_tags, {
-    Name = "${var.common_tags["Project"]} - Private Route Table 0${count.index}"
+    Name = "${var.vpc_name} - Private Route Table 0${count.index}"
   })
 }
 
@@ -115,7 +118,7 @@ resource "aws_subnet" "private_subnets_00" {
   cidr_block        = local.private_subnet_cidrs_groups[0][count.index]
 
   tags = merge(var.common_tags, {
-    Name = "${var.common_tags["Project"]} - ${var.private_subnet_names[0]} Private Subnet"
+    Name = "${var.vpc_name} - ${var.private_subnet_names[0]} Private Subnet"
   })
 }
 
@@ -127,7 +130,7 @@ resource "aws_subnet" "private_subnets_01" {
   cidr_block        = local.private_subnet_cidrs_groups[1][count.index]
 
   tags = merge(var.common_tags, {
-    Name = "${var.common_tags["Project"]} - ${var.private_subnet_names[1]} Private Subnet"
+    Name = "${var.vpc_name} - ${var.private_subnet_names[1]} Private Subnet"
   })
 }
 
@@ -139,7 +142,7 @@ resource "aws_subnet" "private_subnets_02" {
   cidr_block        = local.private_subnet_cidrs_groups[2][count.index]
 
   tags = merge(var.common_tags, {
-    Name = "${var.common_tags["Project"]} - ${var.private_subnet_names[2]} Private Subnet"
+    Name = "${var.vpc_name} - ${var.private_subnet_names[2]} Private Subnet"
   })
 }
 
