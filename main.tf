@@ -80,9 +80,9 @@ resource "aws_subnet" "public_subnets" {
 
 }
 
-resource "aws_route_table_association" "public_subnets" {
-  count          = length(var.public_subnet_names)
-  subnet_id      = aws_subnet.public_subnets[count.index].id
+resource "aws_route_table_association" "public_subnets_00" {
+  count          = length(var.public_subnet_names) >= 1 ? var.availability_zones_count : 0
+  subnet_id      = aws_subnet.public_subnets_00[count.index].id
   route_table_id = aws_route_table.public_route_table.id
 }
 
