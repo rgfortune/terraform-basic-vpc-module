@@ -97,8 +97,18 @@ resource "aws_route_table" "private_route_tables" {
   count  = length(var.private_subnet_names)
   vpc_id = aws_vpc.vpc.id
 
-  dynamic route {
-    for_each = var.nat_gw_count > 0 ? [1] : []
+  # Single NAT GW in use by all private route tables
+  dynamic "route" {
+    for_each = var.nat_gw_count == 1 ? [1] : []
+    content {
+      cidr_block     = "0.0.0.0/0"
+      nat_gateway_id = aws_nat_gateway.nat_gws[0].id
+    }
+  }
+
+  # HA NAT GWs (one per AZ)
+  dynamic "route" {
+    for_each = var.nat_gw_count >= 2 ? [1] : []
     content {
       cidr_block     = "0.0.0.0/0"
       nat_gateway_id = aws_nat_gateway.nat_gws[count.index].id
