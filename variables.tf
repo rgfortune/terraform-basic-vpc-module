@@ -9,6 +9,12 @@ variable "cidr" {
   default     = "10.0.0.0/16"
 }
 
+variable "vpc_eks" {
+  type        = bool
+  description = "VPC for EKS data plane"
+  default     = false
+}
+
 variable "availability_zones_count" {
   type        = number
   description = "Number of availabilty zones to use"

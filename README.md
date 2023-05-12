@@ -1,5 +1,6 @@
 ### Basic VPC
 - Public and Private Subnets
+- Optional Subnets for EKS ENI attachment
 - Internet Gateway
 - NAT Gateway
 ***
@@ -16,6 +17,8 @@ Creates a VPC with public and private subnets in each availability zone.
       # VPC Variables
       vpc_name = "My VPC"
       cidr     = "10.193.17.0/24"
+
+      vpc_eks = false
 
       # Specify the number of AZs you want
       availability_zones_count = 2

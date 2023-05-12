@@ -49,6 +49,40 @@ resource "aws_nat_gateway" "nat_gws" {
 }
 
 #------------------------------------------- 
+# EKS ENI Subnets
+#-------------------------------------------
+
+resource "aws_route_table" "eks_eni_route_table" {
+  lifecycle {
+    ignore_changes = [route]
+  }
+  count  = var.vpc_eks ? 1 : 0
+  vpc_id = aws_vpc.vpc.id
+
+  tags = merge(var.common_tags, {
+    Name = "${var.vpc_name} - EKS ENI Route Table"
+  })
+}
+
+resource "aws_subnet" "eks_eni_subnets" {
+  count = var.vpc_eks ? var.availability_zones_count : 0
+  lifecycle { prevent_destroy = "false" }
+  vpc_id            = aws_vpc.vpc.id
+  availability_zone = local.availability_zones[(count.index % var.availability_zones_count)]
+  cidr_block        = local.eks_eni_subnet_cidrs_groups[0][count.index]
+
+  tags = merge(var.common_tags, {
+    Name = "${var.vpc_name} - EKS ENI Subnet 0${count.index}"
+  })
+}
+
+resource "aws_route_table_association" "eks_eni_subnets" {
+  count          = var.vpc_eks ? var.availability_zones_count : 0
+  subnet_id      = aws_subnet.eks_eni_subnets[count.index].id
+  route_table_id = aws_route_table.eks_eni_route_table[0].id
+}
+
+#------------------------------------------- 
 # Public Subnets
 #------------------------------------------- 
 

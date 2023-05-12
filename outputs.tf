@@ -7,6 +7,8 @@ output "cidr_block" { value = aws_vpc.vpc.cidr_block }
 
 output "availability_zones" { value = local.availability_zones }
 
+output "eks_eni_subnets" { value = aws_subnet.eks_eni_subnets }
+
 output "public_subnets" { value = aws_subnet.public_subnets }
 
 output "private_subnets_00" { value = aws_subnet.private_subnets_00 }
